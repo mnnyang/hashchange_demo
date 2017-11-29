@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--http://benalman.com/projects/jquery-hashchange-plugin/-->
+</head>
+<body>
+<a href="#a">a页面</a>
+<a href="#b">b页面</a>
+<a href="#c">c页面</a>
+
+<br>
+
+<div id="page-content" style="border: solid cadetblue 1px;height: 400px;width: 400px;margin-top: 20px">
+
+</div>
+</body>
+
+<script src="js/jquery-2.2.4.min.js"></script>
+<script src="js/jquery.hashchange.js"></script>
+
+<script>
+    $(function () {
+        $(window).hashchange(function () {
+            console.log("hash" + location.hash);
+            if (!location.hash || location.hash == "") {
+                initHomePage();
+                return;
+            }
+            //我的项目使用jquery.ajax出了点问题 所以使用了原生ajax
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    $("#page-content").html(xhr.responseText);
+                }
+            };
+            var action = location.hash.replace('#', "");
+            console.log(action + ".html");
+            xhr.open("get", action + ".html");
+            xhr.send();
+        });
+
+        $(window).trigger("hashchange");
+    });
+
+    function initHomePage() {
+        window.location = "#main";
+    }
+</script>
+</html>
